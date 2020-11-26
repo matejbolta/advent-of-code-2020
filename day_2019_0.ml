@@ -29,7 +29,8 @@ let naloga2 vsebina_datoteke =
 ;;
 
 
-let main () = (* Prebere day_x.in, zapiše day_x_1.out, day_x_2.out *)
+let _ =
+  let day = "2019_0" in
 
   let preberi_datoteko ime_datoteke =
     let chan = open_in ime_datoteke in
@@ -42,16 +43,11 @@ let main () = (* Prebere day_x.in, zapiše day_x_1.out, day_x_2.out *)
     close_out chan
   in
 
-  let day = "2019_0" in
-
   let vsebina_datoteke = preberi_datoteko ("day_" ^ day ^ ".in") in
   let odgovor1 = naloga1 vsebina_datoteke
   and odgovor2 = naloga2 vsebina_datoteke
   in
 
   izpisi_datoteko ("day_" ^ day ^ "_1.out") odgovor1;
-  izpisi_datoteko ("day_" ^ day ^ "_2.out") odgovor2;
-
-  ()
+  izpisi_datoteko ("day_" ^ day ^ "_2.out") odgovor2
 ;;
-(* REPL konzola >>> main ();; *)
