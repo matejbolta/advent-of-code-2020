@@ -31,5 +31,6 @@ _opam/
 # Added by Matej
 .vscode
 vzorec.ml
+test.ml
 *.in
 *.out
