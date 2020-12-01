@@ -30,7 +30,5 @@ _opam/
 
 # Added by Matej
 .vscode
-vzorec.ml
+sample.ml
 test.ml
-*.in
-*.out

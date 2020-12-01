@@ -1,3 +1,6 @@
+let day = "1"
+
+
 let naloga1 vsebina_datoteke =
   let input_list = String.split_on_char '\n' (String.trim vsebina_datoteke) in
   let input_list = List.map int_of_string input_list in
@@ -31,7 +34,7 @@ let naloga1 vsebina_datoteke =
 
   let solution = string_of_int (get_solution input_list) in
 
-  print_endline solution;
+  print_endline ("day " ^ day ^ ", puzzle 1: " ^ solution);
   solution
 ;;
 
@@ -77,12 +80,10 @@ let naloga2 vsebina_datoteke =
 
   let solution = get_solution input_list in
 
-  print_endline solution;
+  print_endline ("day " ^ day ^ ", puzzle 2: " ^ solution);
   solution
 ;;
 
-
-let day = "1"
 
 let _ =
   let preberi_datoteko ime_datoteke =
@@ -96,11 +97,11 @@ let _ =
     close_out chan
   in
 
-  let vsebina_datoteke = preberi_datoteko ("day_" ^ day ^ ".in") in
+  let vsebina_datoteke = preberi_datoteko ("data/day_" ^ day ^ ".in") in
   let odgovor1 = naloga1 vsebina_datoteke
   and odgovor2 = naloga2 vsebina_datoteke
   in
 
-  izpisi_datoteko ("day_" ^ day ^ "_1.out") odgovor1;
-  izpisi_datoteko ("day_" ^ day ^ "_2.out") odgovor2
+  izpisi_datoteko ("out/day_" ^ day ^ "_1.out") odgovor1;
+  izpisi_datoteko ("out/day_" ^ day ^ "_2.out") odgovor2
 ;;
