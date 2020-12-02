@@ -1,7 +1,7 @@
 let day = "2"
 
 
-(* let get_index_list x list =
+(* let get_index_from_list x list =
   let rec aux x list i = match list with
     | [] -> failwith "Not Found"
     | y :: ys -> if y = x then i else aux x ys (i + 1)
@@ -9,13 +9,13 @@ let day = "2"
   aux x list 0
 ;; *)
 
-(* String.get string n   returns the character at index 'n' in string 'string'. *)
+(* String.get : string -> int -> char *)
 
-(* String.index s c      returns the index of the first occurrence of character c in string s. *)
+(* String.index : string -> char -> int *)
 
 let string_of_char c = String.make 1 c
 
-(* let reverse list =
+(* let reverse list = (* za potrebe štetja ustreznih vnosov je vrstni red seznama nepomemben *)
     let rec aux acc = function
       | [] -> acc
       | x :: xs -> aux (x :: acc) xs
@@ -23,7 +23,7 @@ let string_of_char c = String.make 1 c
     aux [] list
 ;; *)
 
-(* let make_range_list a b =
+(* let make_range_list a b = (* neuporabljena funkcija *)
   let rec aux acc a b =
     if a > b then acc
     else if a < b then aux (a :: acc) (a + 1) b
@@ -33,17 +33,17 @@ let string_of_char c = String.make 1 c
 ;; *)
 
 (* https://stackoverflow.com/questions/10068713/string-to-list-of-char *)
-let explode s = (* string to char list *)
+let explode s = (* : string -> char list *)
   let rec exp i l =
     if i < 0 then l else exp (i - 1) (s.[i] :: l) in
   exp (String.length s - 1) []
 ;;
 
-let make_tuples list =
+let make_tuples list = (* deluje zgolj za naš konkretni vnos podatkov *)
   let rec aux acc = function
     | [] -> acc
     | x :: xs ->
-      (* String.sub : string -> int -> int -> string *)  (* slice ampak druga stevilka je dolzina *)
+      (* String.sub : string -> int -> int -> string *)  (* slice ampak druga stevilka je dolzina slica *)
       let num1 = String.sub x 0 ((String.index x '-')) in
       let num2 = String.sub x ((String.index x '-') + 1) ((String.index x ' ') - (String.index x '-') - 1) in
       let crka = string_of_char (String.get x ((String.index x ':') - 1)) in
@@ -70,16 +70,34 @@ let rec prestej_dobre list counter =
     in
     match list with
     | [] -> counter
-    | tup :: tups -> if ok tup then prestej_dobre tups (counter + 1) else prestej_dobre tups counter
+    | tup :: tups ->
+      if ok tup then prestej_dobre tups (counter + 1)
+      else prestej_dobre tups counter
 ;;
+
+let rec prestej_dobre_2 list counter =
+  let ok2 (st1, st2, crka, niz) =
+    if (crka = string_of_char (String.get niz ((int_of_string st1) - 1))) && (crka = string_of_char (String.get niz ((int_of_string st2) - 1)))
+      then false
+    else if (crka = string_of_char (String.get niz ((int_of_string st1) - 1))) || (crka = string_of_char (String.get niz ((int_of_string st2) - 1)))
+      then true
+    else false
+  in
+  match list with
+  | [] -> counter
+  | tup :: tups -> if ok2 tup then prestej_dobre_2 tups (counter + 1) else prestej_dobre_2 tups counter
+;;
+
+
+(* ------------------------------------------------------------------------- *)
 
 
 let naloga1 vsebina_datoteke =
   let input_list = String.split_on_char '\n' (String.trim vsebina_datoteke) in
-  (* "3-14 v: nekogeslovvv" *)
+  (* "3-14 v: nekogeslovvv" list *)
 
   let tuple_list = make_tuples input_list in
-  (* ("3", "14", "v", "nekogeslovvv") *)
+  (* ("3", "14", "v", "nekogeslovvv") list *)
 
   let solution = string_of_int (prestej_dobre tuple_list 0) in
   
@@ -88,25 +106,10 @@ let naloga1 vsebina_datoteke =
 ;;
 
 
-let ok2 (st1, st2, crka, niz) =
-  if (crka = string_of_char (String.get niz ((int_of_string st1) - 1))) && (crka = string_of_char (String.get niz ((int_of_string st2) - 1)))
-    then false
-  else if (crka = string_of_char (String.get niz ((int_of_string st1) - 1))) || (crka = string_of_char (String.get niz ((int_of_string st2) - 1)))
-    then true
-  else false
-;;
-
-let rec prestej_dobre_2 list counter =
-  match list with
-  | [] -> counter
-  | tup :: tups -> if ok2 tup then prestej_dobre_2 tups (counter + 1) else prestej_dobre_2 tups counter
-;;
-
-
 let naloga2 vsebina_datoteke =
   let input_list = String.split_on_char '\n' (String.trim vsebina_datoteke) in
   let tuple_list = make_tuples input_list in
-  (* ("3", "14", "v", "nekogeslovvv") *)
+  (* ("3", "14", "v", "nekogeslovvv") list *)
   
   let solution = string_of_int (prestej_dobre_2 tuple_list 0) in
 
