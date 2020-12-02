@@ -1,15 +1,16 @@
 let day = "2"
 
 
-let get_index_list x list =
+(* let get_index_list x list =
   let rec aux x list i = match list with
     | [] -> failwith "Not Found"
     | y :: ys -> if y = x then i else aux x ys (i + 1)
   in
   aux x list 0
-;;
+;; *)
 
 (* String.get string n   returns the character at index 'n' in string 'string'. *)
+
 (* String.index s c      returns the index of the first occurrence of character c in string s. *)
 
 let string_of_char c = String.make 1 c
