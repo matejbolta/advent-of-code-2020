@@ -62,7 +62,7 @@ let rec ponovitve x list counter = (* list = explode niz *)
       else ponovitve x ys counter
 ;;
 
-let rec prestej_dobre list counter =
+let rec prestej_dobre counter list =
     let ok (a, b, c, d) =
       let ponovitev = ponovitve c (explode d) 0 in
       if ponovitev >= int_of_string a && ponovitev <= int_of_string b then true
@@ -71,11 +71,11 @@ let rec prestej_dobre list counter =
     match list with
     | [] -> counter
     | tup :: tups ->
-      if ok tup then prestej_dobre tups (counter + 1)
-      else prestej_dobre tups counter
+      if ok tup then prestej_dobre (counter + 1) tups
+      else prestej_dobre counter tups
 ;;
 
-let rec prestej_dobre_2 list counter =
+let rec prestej_dobre_2 counter list =
   let ok2 (st1, st2, crka, niz) =
     if (crka = string_of_char (String.get niz ((int_of_string st1) - 1))) && (crka = string_of_char (String.get niz ((int_of_string st2) - 1)))
       then false
@@ -85,7 +85,7 @@ let rec prestej_dobre_2 list counter =
   in
   match list with
   | [] -> counter
-  | tup :: tups -> if ok2 tup then prestej_dobre_2 tups (counter + 1) else prestej_dobre_2 tups counter
+  | tup :: tups -> if ok2 tup then prestej_dobre_2 (counter + 1) tups else prestej_dobre_2 counter tups
 ;;
 
 
@@ -93,28 +93,36 @@ let rec prestej_dobre_2 list counter =
 
 
 let naloga1 vsebina_datoteke =
-  let input_list = String.split_on_char '\n' (String.trim vsebina_datoteke) in
+  (* let input_list = String.split_on_char '\n' (String.trim vsebina_datoteke) in
   (* "3-14 v: nekogeslovvv" list *)
 
   let tuple_list = make_tuples input_list in
   (* ("3", "14", "v", "nekogeslovvv") list *)
 
-  let solution = string_of_int (prestej_dobre tuple_list 0) in
+  let solution = string_of_int (prestej_dobre 0 tuple_list) in
   
   print_endline ("day " ^ day ^ ", puzzle 1: " ^ solution);
-  solution
+  solution *)
+
+  let s = vsebina_datoteke |> String.trim |> String.split_on_char '\n' |> make_tuples |> prestej_dobre 0 |> string_of_int in
+  print_endline ("day " ^ day ^ ", puzzle 1: " ^ s);
+  s
 ;;
 
 
 let naloga2 vsebina_datoteke =
-  let input_list = String.split_on_char '\n' (String.trim vsebina_datoteke) in
+  (* let input_list = String.split_on_char '\n' (String.trim vsebina_datoteke) in
   let tuple_list = make_tuples input_list in
   (* ("3", "14", "v", "nekogeslovvv") list *)
   
-  let solution = string_of_int (prestej_dobre_2 tuple_list 0) in
+  let solution = string_of_int (prestej_dobre_2 0 tuple_list) in
 
   print_endline ("day " ^ day ^ ", puzzle 2: " ^ solution);
-  solution
+  solution *)
+
+  let s = vsebina_datoteke |> String.trim |> String.split_on_char '\n' |> make_tuples |> prestej_dobre_2 0 |> string_of_int in
+  print_endline ("day " ^ day ^ ", puzzle 2: " ^ s);
+  s
 ;;
 
 (* Celoten dan 2 je bil napisan na način "kako pretvorit imperativne pythonske ukaze v ocaml"... ojoj *)
