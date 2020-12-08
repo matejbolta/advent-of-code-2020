@@ -88,8 +88,8 @@ let rec acc_from_corrected_list last_changed_i og_list =
   (* Zgoraj lokalne definicije, spodaj potek *)
   let (cur_list, changed_i) = change_i_og_list og_list last_changed_i in
   let result = izvedi_ukaze cur_list in
-  if fst result (* = true *) then snd result
-  else acc_from_corrected_list changed_i og_list
+  if fst result (* = true *) then snd result (* smo prišli do konca seznama ukazov, vrnemo rešitev (akumulator) *)
+  else acc_from_corrected_list changed_i og_list (* na cur_list smo se nekje zaloopali, poskusimo naslednji indeks *)
 (*  *)
 
 
@@ -126,3 +126,7 @@ let _ =
   izpisi_datoteko ("out/day_" ^ day ^ "_1.out") odgovor1;
   izpisi_datoteko ("out/day_" ^ day ^ "_2.out") odgovor2
 (*  *)
+
+(*
+Day 8: Zelo lepa rešitev, tako prve kot druge naloge. Funkcijska, z lepo strukturo podaktov.
+*)
