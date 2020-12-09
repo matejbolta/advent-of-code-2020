@@ -159,6 +159,7 @@ let _ =
 (*  *)
 
 (*
-Danes kar lepa koda. Prva naloga super, pri drugi pa preverjamo ogromno
-možnosti, ampak mislim da je to edini način. Skupaj izvaja 1 sekundo.
+Danes kar lepa koda. Prva naloga super, pri drugi pa preverjamo
+ogromno možnosti, ampak mislim da je to edini način.
+Run time:  1. 58ms,  2. 250ms
 *)
