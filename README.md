@@ -1,8 +1,8 @@
-Advent of Code 2020
-===================
+Advent of Code
+==============
 
-Collection of [Advent of Code](https://adventofcode.com/) solutions (event 2020). Written in OCaml.
+Collection of [Advent of Code](https://adventofcode.com/) solutions. Written in OCaml and Python.
 
-- data/ -> .in input files
-- out/  -> .out output files
-- src/  -> .ml files that generate solutions
+- year/data/ -> .in input files
+- year/out/  -> .out output files
+- year/src/  -> .ml or .py files that generate solutions
