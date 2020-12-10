@@ -28,8 +28,8 @@ setup.log
 # Local OPAM switch
 _opam/
 
-# Added by Matej
+# Added manually
 .vscode
-sample.ml
-test.ml
-*.py
+tpl.ml
+trial.ml
+day_.py
