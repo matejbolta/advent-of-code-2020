@@ -1,4 +1,4 @@
-let day = "0-2019"
+let day = "0"
 
 
 let naloga1 vsebina_datoteke =
@@ -48,11 +48,11 @@ let _ =
     close_out chan
   in
 
-  let vsebina_datoteke = preberi_datoteko ("data/day_" ^ day ^ ".in") in
+  let vsebina_datoteke = preberi_datoteko ("2019/data/day_" ^ day ^ ".in") in
   let odgovor1 = naloga1 vsebina_datoteke
   and odgovor2 = naloga2 vsebina_datoteke
   in
 
-  izpisi_datoteko ("out/day_" ^ day ^ "_1.out") odgovor1;
-  izpisi_datoteko ("out/day_" ^ day ^ "_2.out") odgovor2
+  izpisi_datoteko ("2019/out/day_" ^ day ^ "_1.out") odgovor1;
+  izpisi_datoteko ("2019/out/day_" ^ day ^ "_2.out") odgovor2
 ;;
