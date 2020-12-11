@@ -133,13 +133,21 @@ let _ =
     |> List.sort compare
   in
 
+  let start1 = Sys.time () in
   let s1 = naloga1 content |> string_of_int in
+  let end1 = Sys.time () in
+
+  let start2 = Sys.time ()  in
   let s2 = naloga2 content |> string_of_int in
+  let end2 = Sys.time () in
+
+  let time1 = string_of_int (int_of_float (1000. *. (end1 -. start1))) ^ " ms" in
+  let time2 = string_of_int (int_of_float (1000. *. (end2 -. start2))) ^ "ms" in
   
   write_file ("2020/out/day_" ^ day ^ "_1.out") s1;
-  print_endline ("day " ^ day ^ ", puzzle 1: " ^ s1);
+  print_endline ("day " ^ day ^ ", puzzle 1: " ^ s1 ^ " in " ^ time1);
   write_file ("2020/out/day_" ^ day ^ "_2.out") s2;
-  print_endline ("day " ^ day ^ ", puzzle 2: " ^ s2)
+  print_endline ("day " ^ day ^ ", puzzle 2: " ^ s2 ^ " in " ^ time2)
 (*  *)
 
 (*
