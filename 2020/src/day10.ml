@@ -141,7 +141,7 @@ let _ =
   let s2 = naloga2 content |> string_of_int in
   let end2 = Sys.time () in
 
-  let time1 = string_of_int (int_of_float (1000. *. (end1 -. start1))) ^ " ms" in
+  let time1 = string_of_int (int_of_float (1000. *. (end1 -. start1))) ^ "ms" in
   let time2 = string_of_int (int_of_float (1000. *. (end2 -. start2))) ^ "ms" in
   
   write_file ("2020/out/day_" ^ day ^ "_1.out") s1;
