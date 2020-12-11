@@ -32,4 +32,5 @@ _opam/
 .vscode
 tpl.ml
 trial.ml
-day_.py
+tpl.py
+trial.py
