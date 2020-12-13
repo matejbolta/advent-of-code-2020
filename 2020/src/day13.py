@@ -26,50 +26,42 @@ def part1():
 ##########  PART 2  ##########
 ##############################
 
-# Tole je baza za vse nadaljevanje:
+# Brez tega izreka ne bi šlo nikamor:
 # https://en.wikipedia.org/wiki/Chinese_remainder_theorem
 
-# Imamo sistem enačb:
-# t ≡ -o = k-o  (mod k)
-#   ==> t % k = -o = k-o
+# avtobus bi z indeksom i
+# čas t  TO IŠČEMO
+# B = produkt vseh bi
+# Bi = B // bi
 
-# Kitajski izrek o ostankih pravi:
-# t = sum(i) ((k-o) * inverz(Ki) * Ki)
-# kjer je K produkt vseh k; Ki produkt vseh k, razen ki,
-# inverz gledamo po modulu ki
+# Sistem kongruenc:
+# t = bi - i (mod bi)   za vsak i
 
-# https://www.geeksforgeeks.org/multiplicative-inverse-under-modulo-m/
-def modul_inverz(a, n): # Vrne inverz od a po modulu n
-  # vrne x, kjer a * x = 1 (mod n)
-  a = a % n
-  if n == 1:
-    return 1
-  for x in range(1, n): 
-    if ((a * x) % n == 1): # ko pridemo do inverza, ga vrnemo
-      return x 
+# Izrek pravi:
+# t = vsota po i    (bi - i) * inv(Bi) * Bi
+# kjer velja: (inv(Bi) * Bi) (mod bi) = 1
+
+def inv(Bi, bi): # (inv * Bi) (mod bi) = 1
+  for x in range(1, bi): # eden izmed teh bo inverz
+    if (x * Bi) % bi == 1:
+      return x
 
 def part2():
-  buses_raw = content[1].split(',')
-
-  buses = []
-  K = 1 # produkt
-  for o, bus in enumerate(buses_raw):
-    if bus != 'x':
-      k = int(bus)
-      o = o % k # da je o med 0 in k
-      buses.append((o, k))
-      K *= k # nakoncu dobimo celoten produkt v K
-  
+  buses = [bus for bus in content[1].split(',')]
   vsota = 0
-  for oi, ki in buses:
-    Ki = K // ki # sledimo izreku
-    inverz_Ki = modul_inverz(Ki, ki) # sledimo izreku
+  B = 1 # delam celoten zmnožek vseh bi
+  for bi in buses:
+    if bi != 'x':
+      B *= int(bi)
 
-    # člen pride iz izreka
-    clen_vsote = (ki-oi) * inverz_Ki * Ki # k - o = dejansko t % k, oz -o po modulu k
-    vsota += clen_vsote
-  
-  return vsota % K # (vsaj) na vsakih K se ta dogodek ponovno zgodi
+  for i, bi in enumerate(buses):
+    if bi == 'x':
+      continue
+    bi = int(bi)
+    Bi = B // bi
+    vsota += ((bi - i) * inv(Bi, bi) * Bi) # po izreku
+
+  return vsota % B # na vsakih B se ponavlja, zanima pa nas najmanjši tak čas
 
 
 ##############################
@@ -78,7 +70,7 @@ def part2():
 
 import time
 
-def main(redo_first=False, redo_second=True):
+def main(redo_first=True, redo_second=True):
   if redo_first:
     start1 = time.time()
     r1 = part1()
