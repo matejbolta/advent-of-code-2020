@@ -26,64 +26,50 @@ def part1():
 ##########  PART 2  ##########
 ##############################
 
-from math import gcd
-from functools import reduce
+# Tole je baza za vse nadaljevanje:
+# https://en.wikipedia.org/wiki/Chinese_remainder_theorem
 
-def lcm(sez):
-  return reduce(lambda a,b: a*b // gcd(a,b), sez)
-# 581'610'429'053'251
-# 100'000'000'000'000
+# Imamo sistem enačb:
+# t ≡ -o = k-o  (mod k)
+#   ==> t % k = -o = k-o
 
-# 19 -0
-# 41 -9
-# 37 -13
-# 367 -19
-# 13 -32
-# 17 -36
-# 29 -48
-# 373 -50
-# 23 -73
+# Kitajski izrek o ostankih pravi:
+# t = sum(i) ((k-o) * inverz(Ki) * Ki)
+# kjer je K produkt vseh k; Ki produkt vseh k, razen ki,
+# inverz gledamo po modulu ki
 
-# content = [None, '67,7,x,59,61'] # 1'261'476
-# content = [None, '1789,37,47,1889'] # 1'202'161'486
-
-
+# https://www.geeksforgeeks.org/multiplicative-inverse-under-modulo-m/
+def modul_inverz(a, n): # Vrne inverz od a po modulu n
+  # vrne x, kjer a * x = 1 (mod n)
+  a = a % n
+  if n == 1:
+    return 1
+  for x in range(1, n): 
+    if ((a * x) % n == 1): # ko pridemo do inverza, ga vrnemo
+      return x 
 
 def part2():
-  # buses = []
-  # for t in content[1].split(','):
-  #   if t == 'x':
-  #     buses.append(0)
-  #   else:
-  #     buses.append(int(t))
+  buses_raw = content[1].split(',')
 
-  # maks = max(buses)
-  # maks_i = buses.index(maks)
+  buses = []
+  K = 1 # produkt
+  for o, bus in enumerate(buses_raw):
+    if bus != 'x':
+      k = int(bus)
+      o = o % k # da je o med 0 in k
+      buses.append((o, k))
+      K *= k # nakoncu dobimo celoten produkt v K
+  
+  vsota = 0
+  for oi, ki in buses:
+    Ki = K // ki # sledimo izreku
+    inverz_Ki = modul_inverz(Ki, ki) # sledimo izreku
 
-  buses = [(19, 0), (41, 9), (37, 13), (367, 19), (13, 32), (17, 36), (29, 48), (373, 50), (23, 73)]
-
-  maks = 373
-  maks_i = 50
-
-  for t in itertools.count((maks-maks_i), maks):
-    if not (t + maks_i) % ((10**9) * maks):
-      print(t // (10**9), 'miljard')
-
-    all_ok = True
-
-    # for i, bus in enumerate(buses):
-    #   if not bus:
-    #     continue
-    #   elif (t + i) % bus:
-    #     all_ok = False
-    #     break
-    for bus, i in buses:
-      if (t + i) % bus:
-        all_ok = False
-        break
-
-    if all_ok:
-      return t
+    # člen pride iz izreka
+    clen_vsote = (ki-oi) * inverz_Ki * Ki # k - o = dejansko t % k, oz -o po modulu k
+    vsota += clen_vsote
+  
+  return vsota % K # (vsaj) na vsakih K se ta dogodek ponovno zgodi
 
 
 ##############################
@@ -92,7 +78,7 @@ def part2():
 
 import time
 
-def main(redo_first=True, redo_second=False):
+def main(redo_first=False, redo_second=True):
   if redo_first:
     start1 = time.time()
     r1 = part1()
