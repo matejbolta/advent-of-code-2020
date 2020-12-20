@@ -89,55 +89,234 @@ def part1():
 ##########  PART 2  ##########
 ##############################
 
-# def max_length_dict(dic):
-#   m = 0
-#   for x in dic:
-#     m = max(m, len(x))
-#   return m
-
-# 8: n*42                 # so dolžine 8n  # rabimo vse do len 80
-# 11: m*(42 31)         # so dolžine 16m   # rabimo vse do len 88
-# 0: n*42 m*(42 31)      # so dolžine najmanj 24    8-0-88, 80-0-16
-#                                  # najdaljši messig: 96
-
-# initial_rules, final_rules, messages = parse_input()
-# execute_all_rules(initial_rules, final_rules)
-# del final_rules[0] # 2097152
-# del final_rules[8] # 128, tudi 42
-# del final_rules[11] # 16384
-
-# options_8 = final_rules[42]
-# baza_8 = final_rules[42]
-# for _ in range(2): # enkrat že mamo, še devetkrat
-#   mozni = set()
-#   leng = max_length_dict(options_8)
-#   for obstojeci in options_8:
-#     if len(obstojeci) == leng:
-#       for bazni in baza_8:
-#         mozni.add(obstojeci+bazni)
-#   options_8.update(mozni)
-# final_rules[8] = options_8
-
-# 128                      8
-# 16384                    16
-# 2097152
-# 268435456                32
-# 34359738368
-# 4398046511104            48
-# 562949953421312
-# 72057594037927936
-# 9223372036854775808      72
-# 1180591620717411303424   80
-
-# to je 10**21, triljarda. toliko elementov hočemo spravit v options_8
-# kar povzroči MemoryError. Nevem kako bi to naredil bolj učinkovito,
-# saj rabimo poljubno kombinacijo elementov iz final_rules[42] dolžin do dolžine 80.
-
-# kasneje, za 11ko, bi rabili manj korako, saj je posamezen dolžine 16,
-# šli pa bi do dolžine 80 (5 krat)
+# DISCLAIMER: spodnja koda je groza, ne glej ker noces videt tega
 
 def part2():
-  pass
+  # minimalno osem levo in sestnajst desno. (potem pa z večkratniki)
+  # 8: 42 | 42 8
+  # 11: 42 31 | 42 11 31
+
+  initial_rules, final_rules, all_messages = parse_input()
+  execute_all_rules(initial_rules, final_rules)
+
+  # lens = {len(m) for m in all_messages}
+  # # {24, 32, 40, 48, 56, 64, 72, 80}
+  messages = [m for m in all_messages if not m in final_rules[0]] # 249
+  def messages_of_len(n, messages=messages):
+    return [m for m in messages if len(m) == n]
+  mess24 = messages_of_len(24) #  9
+  mess32 = messages_of_len(32) # 67
+  mess40 = messages_of_len(40) # 71
+  mess48 = messages_of_len(48) # 36
+  mess56 = messages_of_len(56) # 32
+  mess64 = messages_of_len(64) # 18
+  mess72 = messages_of_len(72) #  7
+  mess80 = messages_of_len(80) #  5
+  mess88 = messages_of_len(88) #  1
+  mess96 = messages_of_len(96) #  3
+
+  a, b, c = final_rules[8], final_rules[42], final_rules[31]
+
+  finally_gucci_good_messages = {m for m in all_messages if m in final_rules[0]} # will be updated
+  # print(len(finally_gucci_good_messages)) # 149
+
+  for m in mess24: # 24 = 8+16
+    if (
+      (m[0:8] in a) and (m[8:16] in b) and (m[16:24] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+  # print(len(finally_gucci_good_messages)) # 149, +0 (od 9ih)
+
+  for m in mess32: # 32 = 8+8+16
+    if (
+      (m[0:8] in a) and (m[8:16] in a) and (m[16:24] in b) and (m[24:32] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+  # print(len(finally_gucci_good_messages)) # 202, +53 (od 67ih)
+
+  for m in mess40: # 40 = 8+8+8+16 | 8+16+16
+    if (
+      (m[0:8]   in a) and (m[8:16] in a) and (m[16:24] in a) and (m[24:32] in b) and
+      (m[32:40] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16] in b) and (m[16:24] in b) and (m[24:32] in c) and
+      (m[32:40] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+  # print(len(finally_gucci_good_messages)) # 264, +62 (od 71ih)
+
+  for m in mess48: # 48 = 8+8+8+8+16 | 8+8+16+16
+    if (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in a) and
+      (m[32:40] in b) and (m[40:48] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in b) and (m[24:32] in b) and
+      (m[32:40] in c) and (m[40:48] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+  # print(len(finally_gucci_good_messages)) # 294, +30 (od 36ih)
+
+  for m in mess56: # 56 = 8+8+8+8+8+16 | 8+8+8+16+16 | 8+16+16+16
+    if (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in a) and
+      (m[32:40] in a) and (m[40:48] in b) and (m[48:56] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in b) and
+      (m[32:40] in b) and (m[40:48] in c) and (m[48:56] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in b) and (m[16:24] in b) and (m[24:32] in b) and
+      (m[32:40] in c) and (m[40:48] in c) and (m[48:56] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+  # print(len(finally_gucci_good_messages)) # 316, +22 (od 32ih)
+
+  for m in mess64: # 64 = 8+8+8+8+8+8+16 | 8+8+8+8+16+16 | 8+8+16+16+16
+    if (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in a) and
+      (m[32:40] in a) and (m[40:48] in a) and (m[48:56] in b) and (m[56:64] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in a) and
+      (m[32:40] in b) and (m[40:48] in b) and (m[48:56] in c) and (m[56:64] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in b) and (m[24:32] in b) and
+      (m[32:40] in b) and (m[40:48] in c) and (m[48:56] in c) and (m[56:64] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+  # print(len(finally_gucci_good_messages)) # 328, +12 (od 18ih)
+
+  for m in mess72: # 72 = 8+8+8+8+8+8+8+16 | 8+8+8+8+8+16+16 | 8+8+8+16+16+16 | 8+16+16+16+16
+    if (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in a) and
+      (m[32:40] in a) and (m[40:48] in a) and (m[48:56] in a) and (m[56:64] in b) and
+      (m[64:72] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in a) and
+      (m[32:40] in a) and (m[40:48] in b) and (m[48:56] in b) and (m[56:64] in c) and
+      (m[64:72] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in b) and
+      (m[32:40] in b) and (m[40:48] in b) and (m[48:56] in c) and (m[56:64] in c) and
+      (m[64:72] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in b) and (m[16:24] in b) and (m[24:32] in b) and
+      (m[32:40] in b) and (m[40:48] in c) and (m[48:56] in c) and (m[56:64] in c) and
+      (m[64:72] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+  # print(len(finally_gucci_good_messages)) # 331, +3 (od 7ih)
+
+  for m in mess80: # 80 = 8+8+8+8+8+8+8+8+16 | 8+8+8+8+8+8+16+16 | 8+8+8+8+16+16+16 | 8+8+16+16+16+16
+    if (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in a) and
+      (m[32:40] in a) and (m[40:48] in a) and (m[48:56] in a) and (m[56:64] in a) and
+      (m[64:72] in b) and (m[72:80] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in a) and
+      (m[32:40] in a) and (m[40:48] in a) and (m[48:56] in b) and (m[56:64] in b) and
+      (m[64:72] in c) and (m[72:80] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in a) and
+      (m[32:40] in b) and (m[40:48] in b) and (m[48:56] in b) and (m[56:64] in c) and
+      (m[64:72] in c) and (m[72:80] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in b) and (m[24:32] in b) and
+      (m[32:40] in b) and (m[40:48] in b) and (m[48:56] in c) and (m[56:64] in c) and
+      (m[64:72] in c) and (m[72:80] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+  # print(len(finally_gucci_good_messages)) # 332, +1 (od 5ih)
+
+  for m in mess88: # 88 = 8+8+8+8+8+8+8+8+8+16 | 8+8+8+8+8+8+8+16+16 | 8+8+8+8+8+16+16+16 | 8+8+8+16+16+16+16 | 8+16+16+16+16+16
+    if (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in a) and
+      (m[32:40] in a) and (m[40:48] in a) and (m[48:56] in a) and (m[56:64] in a) and
+      (m[64:72] in a) and (m[72:80] in b) and (m[80:88] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in a) and
+      (m[32:40] in a) and (m[40:48] in a) and (m[48:56] in a) and (m[56:64] in b) and
+      (m[64:72] in b) and (m[72:80] in c) and (m[80:88] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in a) and
+      (m[32:40] in a) and (m[40:48] in b) and (m[48:56] in b) and (m[56:64] in b) and
+      (m[64:72] in c) and (m[72:80] in c) and (m[80:88] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in b) and
+      (m[32:40] in b) and (m[40:48] in b) and (m[48:56] in b) and (m[56:64] in c) and
+      (m[64:72] in c) and (m[72:80] in c) and (m[80:88] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in b) and (m[16:24] in b) and (m[24:32] in b) and
+      (m[32:40] in b) and (m[40:48] in b) and (m[48:56] in c) and (m[56:64] in c) and
+      (m[64:72] in c) and (m[72:80] in c) and (m[80:88] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+  # print(len(finally_gucci_good_messages)) # 332, +0 (od enega)
+
+  for m in mess96: # 96 = 8+8+8+8+8+8+8+8+8+8+16 | 8+8+8+8+8+8+8+8+16+16 | 8+8+8+8+8+8+16+16+16 | 8+8+8+8+16+16+16+16 | 8+8+16+16+16+16+16
+    if (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in a) and
+      (m[32:40] in a) and (m[40:48] in a) and (m[48:56] in a) and (m[56:64] in a) and
+      (m[64:72] in a) and (m[72:80] in a) and (m[80:88] in b) and (m[88:96] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in a) and
+      (m[32:40] in a) and (m[40:48] in a) and (m[48:56] in a) and (m[56:64] in a) and
+      (m[64:72] in b) and (m[72:80] in b) and (m[80:88] in c) and (m[88:96] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in a) and
+      (m[32:40] in a) and (m[40:48] in a) and (m[48:56] in b) and (m[56:64] in b) and
+      (m[64:72] in b) and (m[72:80] in c) and (m[80:88] in c) and (m[88:96] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in a) and (m[24:32] in a) and
+      (m[32:40] in b) and (m[40:48] in b) and (m[48:56] in b) and (m[56:64] in b) and
+      (m[64:72] in c) and (m[72:80] in c) and (m[80:88] in c) and (m[88:96] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+    elif (
+      (m[0:8]   in a) and (m[8:16]  in a) and (m[16:24] in b) and (m[24:32] in b) and
+      (m[32:40] in b) and (m[40:48] in b) and (m[48:56] in b) and (m[56:64] in c) and
+      (m[64:72] in c) and (m[72:80] in c) and (m[80:88] in c) and (m[88:96] in c)
+    ):
+      finally_gucci_good_messages.add(m)
+  # print(len(finally_gucci_good_messages)) # 332, +0 (od treh)
+
+  return len(finally_gucci_good_messages)
 
 
 ##############################
@@ -146,7 +325,7 @@ def part2():
 
 import time
 
-def main(redo_first=True, redo_second=False):
+def main(redo_first=True, redo_second=True):
   if redo_first:
     start1 = time.time()
     r1 = part1()
@@ -167,5 +346,8 @@ def main(redo_first=True, redo_second=False):
 
 main()
 
-# Day 19, part 1: 149 in 986ms
-# rip part 2
+# grozna rešitev druge naloge ampak ura je 3 zjutri in sem vesel :)
+# part2 deluje samo na podanem inputu (kar je bilo namignjeno tudi v navodilih)
+
+# Day 19, part 1: 149 in 852ms
+# Day 19, part 2: 332 in 893ms
